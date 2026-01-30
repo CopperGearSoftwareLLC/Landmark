@@ -1,0 +1,7 @@
+PROJECT_NAME           = "@PROJECT_NAME@"
+OUTPUT_DIRECTORY       = "@CMAKE_CURRENT_BINARY_DIR@/docs"
+INPUT                  = "@CMAKE_SOURCE_DIR@/Engine @CMAKE_SOURCE_DIR@/Launcher @CMAKE_SOURCE_DIR@/Module"
+RECURSIVE              = YES
+GENERATE_LATEX         = NO
+GENERATE_HTML          = YES
+EXTRACT_ALL            = YES

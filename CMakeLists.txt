@@ -1,0 +1,26 @@
+cmake_minimum_required(VERSION 3.10.0)
+project(Landmark VERSION 0.1.0 LANGUAGES C CXX)
+
+enable_testing()
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+include(cmake/GL.cmake)
+include(cmake/Boost.cmake)
+include(cmake/ImGui.cmake)
+include(cmake/BrassUtils.cmake)
+include(cmake/BronzeGraph.cmake)
+
+include(cmake/DepsInterface.cmake)
+add_subdirectory(Module)
+add_subdirectory(Engine)
+add_subdirectory(Launcher)
+
+option(LANDMARK_TESTS "Enable Landmark Tests" ON)
+option(LANDMARK_DOCS "Enable Landmark Tests" ON)
+
+if(LANDMARK_TESTS)
+add_subdirectory(Tests)
+endif()
+if(LANDMARK_DOCS)
+include(cmake/Docs.cmake)
+endif()
