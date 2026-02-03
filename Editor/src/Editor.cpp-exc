@@ -1,0 +1,113 @@
+#include <QApplication>
+#include <QOpenGLWindow>
+#include <QOpenGLFunctions_4_5_Core>
+#include <QSurfaceFormat>
+
+class TriangleWindow final
+    : public QOpenGLWindow
+    , protected QOpenGLFunctions_4_5_Core
+{
+public:
+    void initializeGL() override
+    {
+        initializeOpenGLFunctions();
+
+        // --- Vertex data ---
+        float vertices[] = {
+            -0.5f, -0.5f, 0.0f,
+             0.5f, -0.5f, 0.0f,
+             0.0f,  0.5f, 0.0f
+        };
+
+        // --- VAO / VBO ---
+        glCreateVertexArrays(1, &vao);
+        glCreateBuffers(1, &vbo);
+
+        glNamedBufferData(vbo, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+        glVertexArrayVertexBuffer(vao, 0, vbo, 0, 3 * sizeof(float));
+        glEnableVertexArrayAttrib(vao, 0);
+        glVertexArrayAttribFormat(vao, 0, 3, GL_FLOAT, GL_FALSE, 0);
+        glVertexArrayAttribBinding(vao, 0, 0);
+
+        // --- Shaders ---
+        const char* vsSrc = R"(
+            #version 450 core
+            layout (location = 0) in vec3 pos;
+            void main() {
+                gl_Position = vec4(pos, 1.0);
+            }
+        )";
+
+        const char* fsSrc = R"(
+            #version 450 core
+            out vec4 color;
+            void main() {
+                color = vec4(1.0, 0.6, 0.2, 1.0);
+            }
+        )";
+
+        GLuint vs = glCreateShader(GL_VERTEX_SHADER);
+        glShaderSource(vs, 1, &vsSrc, nullptr);
+        glCompileShader(vs);
+
+        GLuint fs = glCreateShader(GL_FRAGMENT_SHADER);
+        glShaderSource(fs, 1, &fsSrc, nullptr);
+        glCompileShader(fs);
+
+        program = glCreateProgram();
+        glAttachShader(program, vs);
+        glAttachShader(program, fs);
+        glLinkProgram(program);
+
+        glDeleteShader(vs);
+        glDeleteShader(fs);
+
+        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+    }
+
+    void resizeGL(int w, int h) override
+    {
+        glViewport(0, 0, w, h);
+    }
+
+    void paintGL() override
+    {
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        glUseProgram(program);
+        glBindVertexArray(vao);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+    }
+
+    ~TriangleWindow() override
+    {
+        if (program) glDeleteProgram(program);
+        if (vbo) glDeleteBuffers(1, &vbo);
+        if (vao) glDeleteVertexArrays(1, &vao);
+    }
+
+private:
+    GLuint vao = 0;
+    GLuint vbo = 0;
+    GLuint program = 0;
+};
+
+int main(int argc, char** argv)
+{
+    QApplication app(argc, argv);
+
+    QSurfaceFormat format;
+    format.setVersion(4, 5);
+    format.setProfile(QSurfaceFormat::CoreProfile);
+    format.setDepthBufferSize(24);
+    format.setStencilBufferSize(8);
+    format.setSwapBehavior(QSurfaceFormat::TripleBuffer);
+    QSurfaceFormat::setDefaultFormat(format);
+
+    TriangleWindow window;
+    window.resize(800, 600);
+    window.show();
+
+    return app.exec();
+}

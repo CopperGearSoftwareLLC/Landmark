@@ -2,14 +2,17 @@
 file(GLOB_RECURSE SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 
 # --- Build executable ---
-add_executable(Engine ${SOURCES})
-add_dependencies(Engine Module)
+add_library(LandmarkEngine STATIC ${SOURCES})
+
 
 
 # --- Include directories ---
-target_include_directories(Engine
-    PRIVATE
-        "${CMAKE_CURRENT_SOURCE_DIR}/src"
+target_include_directories(LandmarkEngine
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
+        ${EGL_INCLUDE_DIRS}
+        ${OPENGL_INCLUDE_DIR}
+         ${glad_SOURCE_DIR}/include
         # ${imgui_SOURCE_DIR}
         # ${implot_SOURCE_DIR}
         #${glfw_SOURCE_DIR}/include
@@ -19,16 +22,19 @@ target_include_directories(Engine
 
 )
 # --- Link libraries ---
-target_link_libraries(Engine
+target_link_libraries(LandmarkEngine
     PRIVATE
         ${API_NAME}
-        #glfw
-        #glew_s
-        #imgui_lib
-        #implot_lib
+        imgui_lib
+        implot_lib
         Boost::stacktrace_addr2line
-        #OpenGL::GL
+        fg::FrameGraph
+        OpenGL::GL
+        BrassUtils
+        ${EGL_LIBRARIES}
+        #glad
+        
 
 )
-target_compile_definitions(Engine PRIVATE)
-add_executable(Landmark::Engine ALIAS Engine)
+target_compile_definitions(LandmarkEngine PRIVATE)
+add_library(Landmark::Engine ALIAS LandmarkEngine)
