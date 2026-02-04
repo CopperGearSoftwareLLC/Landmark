@@ -1,7 +1,10 @@
 #include "LandmarkEditor.hpp"
 #include "LandmarkEngine.hpp"
+#include <QTimer>
 
 int LandmarkEditor::exec() { 
-    LandmarkEngine::Get().init(LandmarkEngine::Settings{});
+     QTimer::singleShot(0, []() {
+        LandmarkEngine::Get().init(LandmarkEngine::Settings{});
+    });
     return QApplication::exec(); 
 }

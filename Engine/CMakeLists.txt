@@ -23,18 +23,22 @@ target_include_directories(LandmarkEngine
 )
 # --- Link libraries ---
 target_link_libraries(LandmarkEngine
-    PRIVATE
+    PUBLIC
         ${API_NAME}
         imgui_lib
         implot_lib
+        Boost::headers
+        Boost::bimap
+        Boost::math
+        Boost::static_string
+        Boost::graph
         Boost::stacktrace_addr2line
         fg::FrameGraph
         OpenGL::GL
         BrassUtils
         ${EGL_LIBRARIES}
-        #glad
-        
-
+        glad_gl_core_43
+        EnTT
 )
-target_compile_definitions(LandmarkEngine PRIVATE)
+target_compile_definitions(LandmarkEngine PUBLIC GLM_ENABLE_EXPERIMENTAL)
 add_library(Landmark::Engine ALIAS LandmarkEngine)

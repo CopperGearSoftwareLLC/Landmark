@@ -22,6 +22,7 @@ target_link_libraries(LandmarkEditor
         Landmark::Deps
         Qt6::Widgets
         Qt6::OpenGL
+
 )
 target_compile_definitions(LandmarkEditor
     PRIVATE

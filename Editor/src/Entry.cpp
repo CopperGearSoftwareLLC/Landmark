@@ -1,6 +1,6 @@
 #include "LandmarkEditor.hpp"
 int main(int argc, char **argv) {
 
-  LandmarkEditor editor(argc, argv);
-  return editor.exec();
+  LandmarkEditor::Make(argc, argv);
+  return LandmarkEditor::Get().exec();
 }

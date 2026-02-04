@@ -1,3 +1,15 @@
 {
-    "C_Cpp.intelliSenseEngine": "disabled"
+    "C_Cpp.intelliSenseEngine": "disabled",
+     "cmake.debugConfig": {
+    "environment": [
+      {
+        "name": "QT_QPA_PLATFORM",
+        "value": "xcb"
+      },
+      {
+        "name": "XDG_SESSION_TYPE",
+        "value": "x11"
+      }
+    ]
+  }
 }
