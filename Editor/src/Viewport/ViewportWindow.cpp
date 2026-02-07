@@ -2,7 +2,9 @@
 void ViewportWindow::GLTriangleTest()
 {
     // ---- Minimal OpenGL setup for a triangle ----
-
+    GLuint vao = 0;
+    GLuint vbo = 0;
+    GLuint shaderProgram = 0;
     surface->MakeCurrent();
     // 1. Vertex data
     float vertices[] = {

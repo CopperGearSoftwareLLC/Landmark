@@ -1,6 +1,7 @@
 #pragma once
 
 #include "glm/detail/qualifier.hpp"
+#include "glm/fwd.hpp"
 #include "glm/glm.hpp"
 #include "glm/gtx/string_cast.hpp"
 using uint8 = glm::uint8;
@@ -17,14 +18,17 @@ using int64 = glm::int64;
 
 template <size_t L, typename T> using vec = glm::vec<L, T>;
 
+using vec1 = glm::vec1;
 using vec2 = glm::vec2;
 using vec3 = glm::vec3;
 using vec4 = glm::vec4;
 
+using ivec1 = glm::ivec1;
 using ivec2 = glm::ivec2;
 using ivec3 = glm::ivec3;
 using ivec4 = glm::ivec4;
 
+using uvec1 = glm::uvec1;
 using uvec2 = glm::uvec2;
 using uvec3 = glm::uvec3;
 using uvec4 = glm::uvec4;

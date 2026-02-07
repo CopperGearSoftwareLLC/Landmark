@@ -21,9 +21,10 @@ class OpenGL45Backend : public IGraphicsBackend
         EGLNativeWindowType win = *((EGLNativeWindowType *)params.nativeWindow);
         std::shared_ptr<OpenGL45Surface> context =
             std::make_shared<OpenGL45Surface>(display, config, win, nullptr);
-            return context;
+        return context;
     }
-    EGLContext GetMainContext() const {return headlessContext;}
+    EGLContext GetMainContext() const { return headlessContext; }
+    std::unique_ptr<IGraphicsAllocator> impl_MakeAllocator() override;
 
   private:
     EGLDisplay display = EGL_NO_DISPLAY;

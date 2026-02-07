@@ -1,11 +1,20 @@
 #pragma once
+#include "Graphics/GraphicsEnums.hpp"
+#include "Graphics/IGraphicsResource.hpp"
 #include "Math.hpp"
- 
-class ITexture
+#include <variant>
+
+class ITexture : public IGraphicsResource
 {
-    public:
-    using TextureHandle = uint64;
 
+  public:
+    struct Desc
+    {
+        std::variant<ivec1, ivec2, ivec3> dimensions;
+        bool IsArrayType = false;
+    } desc;
+    ITexture(IGraphicsAllocator &allocator, GraphicsResourceID &ID,
+             const Desc &desc);
 
-    virtual TextureHandle GetNativeHandle() const = 0;
+    const Desc &GetDesc() const { return desc; }
 };

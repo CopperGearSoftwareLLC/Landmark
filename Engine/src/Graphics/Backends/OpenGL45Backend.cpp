@@ -1,5 +1,6 @@
 #include "OpenGL45Backend.hpp"
 
+#include "Graphics/Allocator/OpenGL45Allocator.hpp"
 #include "glad/gl.h"
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
@@ -7,6 +8,7 @@
 #include <cstring>
 #include <format>
 #include <iostream>
+#include <memory>
 #include <stdexcept>
 OpenGL45Backend::OpenGL45Backend(const Settings &_settings)
     : settings(_settings)
@@ -26,7 +28,7 @@ OpenGL45Backend::OpenGL45Backend(const Settings &_settings)
 
     // 3. Choose config
     const EGLint configAttribs[] = {EGL_SURFACE_TYPE,
-                                     EGL_WINDOW_BIT |EGL_PBUFFER_BIT,
+                                    EGL_WINDOW_BIT | EGL_PBUFFER_BIT,
                                     EGL_RENDERABLE_TYPE,
                                     EGL_OPENGL_BIT,
                                     EGL_RED_SIZE,
@@ -54,7 +56,7 @@ OpenGL45Backend::OpenGL45Backend(const Settings &_settings)
     {
         std::printf("Failed to create headless PBuffer surface");
     }
-eglBindAPI(EGL_OPENGL_API);
+    eglBindAPI(EGL_OPENGL_API);
     // 5. Create headless context
     const EGLint contextAttribs[] = {EGL_CONTEXT_MAJOR_VERSION, 4,
                                      EGL_CONTEXT_MINOR_VERSION, 5, EGL_NONE};
@@ -81,26 +83,34 @@ eglBindAPI(EGL_OPENGL_API);
     std::string extensionString = exts;
     std::cout << "EGL Extensions:\n" << extensionString << std::endl;
 
-        std::cout << "EGL debug functions found\n";
-        PFNEGLDEBUGMESSAGECONTROLKHRPROC eglDebugMessageControlKHR =
-            (PFNEGLDEBUGMESSAGECONTROLKHRPROC)eglGetProcAddress(
-                "eglDebugMessageControlKHR");
+    std::cout << "EGL debug functions found\n";
+    PFNEGLDEBUGMESSAGECONTROLKHRPROC eglDebugMessageControlKHR =
+        (PFNEGLDEBUGMESSAGECONTROLKHRPROC)eglGetProcAddress(
+            "eglDebugMessageControlKHR");
 
-        PFNEGLQUERYDEBUGKHRPROC eglQueryDebugKHR =
-            (PFNEGLQUERYDEBUGKHRPROC)eglGetProcAddress("eglQueryDebugKHR");
+    PFNEGLQUERYDEBUGKHRPROC eglQueryDebugKHR =
+        (PFNEGLQUERYDEBUGKHRPROC)eglGetProcAddress("eglQueryDebugKHR");
 
-        eglDebugMessageControlKHR(
-            [](EGLenum error, const char *command, EGLint messageType,
-               EGLLabelKHR threadLabel, EGLLabelKHR objectLabel,
-               const char *message)
-            {
-                std::printf(std::format("EGL ERROR:\nError {}\nCommand {}\nmessageType {}\nthreadlabel {}\nobjectLabel {}\nmessage {}",
-                                        error, command, messageType,
-                                        threadLabel, objectLabel, message)
-                                .c_str());
-            },
-            nullptr);
+    eglDebugMessageControlKHR(
+        [](EGLenum error, const char *command, EGLint messageType,
+           EGLLabelKHR threadLabel, EGLLabelKHR objectLabel,
+           const char *message)
+        {
+            std::printf(
+                std::format("EGL ERROR:\nError {}\nCommand {}\nmessageType "
+                            "{}\nthreadlabel {}\nobjectLabel {}\nmessage {}",
+                            error, command, messageType, threadLabel,
+                            objectLabel, message)
+                    .c_str());
+        },
+        nullptr);
 
     std::cout << "Headless OpenGL initialized:" << glGetString(GL_VERSION)
               << " on: " << glGetString(GL_RENDERER) << std::endl;
 };
+std::unique_ptr<IGraphicsAllocator> OpenGL45Backend::impl_MakeAllocator()
+{
+    std::unique_ptr<OpenGL45Allocator> allocator =
+        std::make_unique<OpenGL45Allocator>(*this);
+    return allocator;
+}

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Editor/EditorWidget.hpp"
-#include "Render/ViewportWindow.hpp"
+#include "Viewport/ViewportWindow.hpp"
 #include "World/WorldView.hpp"
 #include <QVBoxLayout>
 #include <qboxlayout.h>

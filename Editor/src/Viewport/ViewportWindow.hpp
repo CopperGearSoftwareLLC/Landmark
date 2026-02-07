@@ -23,9 +23,7 @@ class ViewportWindow : public QWindow
 
   private:
     std::shared_ptr<IGraphicsSurface> surface;
-    GLuint vao = 0;
-    GLuint vbo = 0;
-    GLuint shaderProgram = 0;
+
 
     void exposeEvent(QExposeEvent *) override;
     void GLTriangleTest();

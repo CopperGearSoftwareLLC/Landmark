@@ -8,6 +8,7 @@ class WorldView
 
   public:
     void Render() {}
+    
     void setTarget(std::shared_ptr<IRenderTarget> target)
     {
         render_target = target;

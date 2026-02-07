@@ -1,7 +1,7 @@
 #pragma once
 
 #include "LandmarkEditor.hpp"
-#include "Render/Viewport.hpp"
+#include "Viewport/Viewport.hpp"
 #include "System/ISystem.hpp"
 
 #include "System/RegisterSystem.hpp"
